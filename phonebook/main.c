@@ -1,13 +1,24 @@
 #include <stdio.h>
+#include <string.h>
+
 #include "cliapi.h"
+
 
 int main()
 {
-	char name[32] = {0};
-	cliapi_printHeader("TELEFONKONYV");
+	char* command;
+	int first = 1;
 
-	scanf("%s",name);
-	printf("Hello %s",name);
-	
+	cliapi_printHeader();
+	do
+	{
+		if(!first) printf("Hibas parancs! Segitseghez ird be 'help'!");
+		first=0;
+
+		command = cliapi_waitForCommand();
+	}
+	while(strcmp(command,"help")!=0);
+
+
 	return 0;
 }

@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
-void cliapi_printHeader(char text[]);
+void cliapi_printHeader();
+char * cliapi_waitForCommand();
 
 #endif
