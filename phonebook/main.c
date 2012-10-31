@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "cliapi.h"
+#include "main.h"
 
 
 int main()
