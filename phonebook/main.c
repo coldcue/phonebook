@@ -6,18 +6,26 @@
 
 int main()
 {
-	char* command;
-	int first = 1;
+	int err = 0, exit = 0;
 
 	cliapi_printHeader();
+
 	do
 	{
-		if(!first) printf("Hibas parancs! Segitseghez ird be 'help'!");
-		first=0;
+		char* command;
 
+		if(err){ 
+			printf("Hibas parancs! Segitseghez ird be 'help'!");
+			err=0;
+		}
 		command = cliapi_waitForCommand();
+
+		if(strcmp(command,"help")==0)printf("Segitseg...\n");
+		else if(strcmp(command,"exit")==0)exit=1;
+		else err=1;
+
 	}
-	while(strcmp(command,"help")!=0);
+	while(!exit);
 
 
 	return 0;

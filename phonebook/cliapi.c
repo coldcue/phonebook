@@ -2,7 +2,7 @@
 
 void cliapi_printHeader()
 {
-	printf("########## TELEFONKONYV ##########\nSegitseghez irja be 'help'!\n");
+	printf("########## TELEFONKONYV ##########\nSegitseghez ird be 'help'!\n");
 }
 
 char* cliapi_waitForCommand()

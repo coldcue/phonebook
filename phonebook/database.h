@@ -1,7 +1,7 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#define DBFILE "database.csv"
+#define DBFILE "db.bin"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,14 +10,17 @@
 /* Entity structures */
 typedef struct {
 	int id;
-	char *name, *number, *occptn
+	char name[64], number[32], occptn[32];
 } Contact;
 
+FILE* db;
+
+int db_construct();
 int db_save(Contact * cntct);
 int db_update(Contact * cntct);
 int db_delete(Contact * cntct);
 int db_get(int id);
 int db_search(char needle[], Contact *results);
-char* db_convertToCsv(Contact *cntct);
+void db_destroy();
 
 #endif
