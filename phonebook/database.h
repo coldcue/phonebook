@@ -14,9 +14,6 @@ typedef struct {
 	char name[64], number[32], occptn[32], email[256];
 } Contact;
 
-/* Global db file handler */
-FILE* db;
-
 /* Initializing the database api */
 int db_construct();
 /* Saving a new entity */
