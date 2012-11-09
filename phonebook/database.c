@@ -2,9 +2,8 @@
 
 int db_isEmpty(FILE* db)
 {
-	unsigned pos;
+	fpos_t pos;
 
-	db = fopen(DBFILE,"r");
 	fseek(db,0,SEEK_END);
 	pos = ftell(db);
 
@@ -14,8 +13,6 @@ int db_isEmpty(FILE* db)
 unsigned db_getBiggestId(FILE* db)
 {
 	unsigned id;
-
-	db = fopen(DBFILE,"r");
 
 	if(db_isEmpty(db)) return 0;
 	fseek(db,-sizeof(Contact),SEEK_END);
@@ -27,25 +24,25 @@ unsigned db_getBiggestId(FILE* db)
 int db_save(Contact * cntct)
 {
 	FILE* db;
-
-	db = fopen(DBFILE,"a");
+	
+	db = fopen(DBFILE,"rb");
 	cntct->id = db_getBiggestId(db)+1;
+	fclose(db);
 
+	db = fopen(DBFILE,"ab");
+	
 	fwrite(cntct,sizeof(Contact),1,db);
 	fclose(db);
 
 	return 1;
 }
 
-unsigned db_countEntities()
+unsigned db_countEntities(FILE *db)
 {
-	FILE* db;
 	unsigned r;
 
-	db = fopen(DBFILE,"r");
 	fseek(db,0,SEEK_END);
 	r = ftell(db)/sizeof(Contact);
-	fclose(db);
 	return r;
 }
 
@@ -57,37 +54,66 @@ unsigned db_getIdFromPos(FILE* db, const fpos_t *pos)
 	return id;
 }
 
-void db_getPosOfEntity(unsigned id, FILE *db, fpos_t *pos)
+int db_getPosOfEntity(unsigned id, FILE *db, fpos_t *cur)
 {
-	fseek(db,0,SEEK_SET);
-	*pos = ftell(db);
+	unsigned min_id, max_id, cur_id;
+	fpos_t min, max;
 
-	while(id != db_getIdFromPos(db,pos))
+	fseek(db,0,SEEK_SET);
+
+	/*Get the min, max and cur*/
+	min = ftell(db);
+	min_id = db_getIdFromPos(db,&min);
+
+	max = min+(db_countEntities(db)-1)*sizeof(Contact);
+	max_id = db_getIdFromPos(db,&max);
+
+	*cur = (min/sizeof(Contact)+max/sizeof(Contact))/2*sizeof(Contact);
+	cur_id = db_getIdFromPos(db,cur);
+
+	while(cur_id != id && min_id <= max_id)
 	{
-		*pos+=(fpos_t)sizeof(Contact);
+		if(cur_id<id){
+			min = *cur+sizeof(Contact);
+			min_id = db_getIdFromPos(db,&min);
+		}
+		else {
+			max = *cur-sizeof(Contact);
+			max_id = db_getIdFromPos(db,&max);
+		}
+		*cur = (min/sizeof(Contact)+max/sizeof(Contact))/2*sizeof(Contact);
+		cur_id = db_getIdFromPos(db,cur);
 	}
+
+	if(cur_id==id) return 1;
+	return 0;
 }
 
-Contact db_read(FILE *db, const fpos_t *pos)
+int db_read(FILE *db, Contact * cntct, const fpos_t *pos)
 {
-	Contact cntct;
+	Contact buf;
 	fsetpos(db,pos);
-	fread(&cntct,sizeof(Contact),1,db);
-	return cntct;
+	fread(&buf,sizeof(Contact),1,db);
+	*cntct = buf;
+	return 1;
 }
 
 int db_get(unsigned id, Contact *cntct)
 {
 	FILE* db;
 	fpos_t pos;
+	int r=0;
 
-	db = fopen(DBFILE,"r");
+	db = fopen(DBFILE,"rb");
 	if(db_isEmpty(db)) return 0;
 
-	db_getPosOfEntity(id,db,&pos);
-	db_read(db,&pos);
+	if(db_getPosOfEntity(id,db,&pos))
+	{
+		db_read(db,cntct,&pos);
+		r=1;
+	}
 
 	fclose(db);
-	return 1;
+	return r;
 }
 
