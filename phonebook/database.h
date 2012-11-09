@@ -8,25 +8,62 @@
 #include <stdlib.h>
 #include "main.h"
 
-/* Entity structure */
+/**
+The Contact entity structure
+*/
 typedef struct {
-	int id;
+	unsigned id;
 	char name[64], number[32], occptn[32], email[256];
 } Contact;
 
-/* Initializing the database api */
+/**
+A vector of contacts
+*/
+typedef struct {
+	int size;
+	Contact cntcts[];
+} ContactVector;
+
+/**
+Initialize the database
+*/
 int db_construct();
-/* Saving a new entity */
-int db_save(Contact * cntct);
-/* Updating an existing entity */
-int db_update(Contact * cntct);
-/* Deleting an entity */
-int db_delete(Contact * cntct);
-/* Getting an entity from the db */
-int db_get(int id);
-/* Searching for entities */
-int db_search(char needle[], Contact *results);
-/* Destroying the database api */
+
+/**
+Save a Contact to the database
+@param cntct A pointer of a Contact
+*/
+int db_save(Contact *cntct);
+
+/**
+Updates a Contact in the database
+@param cntct A pointer of a Contact
+*/
+int db_update(Contact *cntct);
+
+/**
+Deletes a Contact in the database
+@param cntct A pointer of a Contact
+*/
+int db_delete(Contact *cntct);
+
+/**
+Gets a Contact from the database
+@param id The ID of the Contact
+@param cntct A pointer of a Contact
+*/
+int db_get(unsigned id, Contact *cntct);
+
+/**
+Gets a Contact from the database
+@param id The ID of the Contact
+@return A ContactVector (if the size is 0, there are no Contacts found)
+*/
+ContactVector* db_search(char needle[]);
+
+/**
+Destroys the database
+*/
 void db_destroy();
 
 #endif

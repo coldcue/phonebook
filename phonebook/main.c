@@ -25,13 +25,14 @@ int main()
 		if(strcmp(command,"help")==0)printf("Segitseg...\n");
 		else if(strcmp(command,"exit")==0)exit=1;
 		else if(strcmp(command,"test")==0){
-			Contact cntct;
-			cntct.id=0;
+			/*Contact cntct;
 			strcpy(cntct.email,"coldcue@gmail.com");
 			strcpy(cntct.name,"Andrew Szell");
 			strcpy(cntct.number,"06202094988");
 			strcpy(cntct.occptn,"Programmer");
-			db_save(&cntct);
+			db_save(&cntct);*/
+			Contact cntct;
+			db_get(2,&cntct);
 		}
 		else err=1;
 
