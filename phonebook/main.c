@@ -26,15 +26,15 @@ int main()
 		else if(strcmp(command,"exit")==0)exit=1;
 		else if(strcmp(command,"test")==0){
 			Contact cntct,cntct2;
-			for(i=0; i<874; i++){
-			strcpy(cntct.email,"coldcue@gmail.com");
-			strcpy(cntct.name,"Andrew Szell");
-			strcpy(cntct.number,"06202094988");
-			strcpy(cntct.occptn,"Programmer");
-			db_save(&cntct);
-			}
+			//for(i=0; i<2112323; i++){
+			//strcpy(cntct.email,"coldcue@gmail.com");
+			//strcpy(cntct.name,"Andrew Szell");
+			//strcpy(cntct.number,"06202094988");
+			//strcpy(cntct.occptn,"Programmer");
+			//db_save(&cntct);
+			//}
 
-			printf("%d",db_get(1345000,&cntct2));
+			printf("%d",db_get(13445,&cntct2));
 			putchar('a');
 		}
 		else err=1;
