@@ -1,5 +1,10 @@
 #include "database.h"
 
+int db_construct()
+{
+	if(fopen(DBFILE,"rb")==NULL) fopen(DBFILE,"wb");
+}
+
 int db_isEmpty(FILE* db)
 {
 	fpos_t pos;

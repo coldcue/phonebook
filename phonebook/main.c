@@ -5,10 +5,11 @@
 #include "database.h"
 #include "main.h"
 
-
 int main()
 {
 	int err = 0, exit = 0, i;
+
+	db_construct();
 
 	cliapi_printHeader();
 
@@ -70,23 +71,34 @@ int main()
 		else if(strcmp(command,"exit")==0)exit=1;
 		else if(strcmp(command,"test")==0){
 			Contact cntct;
-			ContactList *cntcts=NULL;
-			/*for(i=0; i<21123; i++){
+
+			for(i=0; i<2000; i++){
 			strcpy(cntct.email,"coldcue@gmail.com");
 			strcpy(cntct.name,"Andrew Szell");
 			strcpy(cntct.number,"06202094988");
 			strcpy(cntct.occptn,"Programmer");
 			db_save(&cntct);
-			}*/
+			}
 
 			printf("%d",db_get(311,&cntct));
-			//printf("%s",cntct.name);
-			//db_delete(cntct.id);
-			strcpy(cntct.name,"Baszar Benedek");
+			strcpy(cntct.name,"Kukor Ica");
 			printf("%d",db_update(&cntct));
-			//putchar('a');
-			cntcts = db_search("szar");
-			list_free(&cntcts);
+
+			printf("%d",db_get(878,&cntct));
+			strcpy(cntct.name,"Buz Ubul");
+			printf("%d",db_update(&cntct));
+
+			printf("%d",db_get(18,&cntct));
+			strcpy(cntct.name,"Matr Ica");
+			printf("%d",db_update(&cntct));
+
+			printf("%d",db_get(97,&cntct));
+			strcpy(cntct.name,"Vegh Bela");
+			printf("%d",db_update(&cntct));
+
+			printf("%d",db_get(55,&cntct));
+			strcpy(cntct.name,"Kat Ica");
+			printf("%d",db_update(&cntct));
 		}
 		else err=1;
 	}
