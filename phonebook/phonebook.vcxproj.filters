@@ -24,6 +24,9 @@
     <ClCompile Include="database.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="listc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cliapi.h">
@@ -32,7 +35,7 @@
     <ClInclude Include="database.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="main.h">
+    <ClInclude Include="list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

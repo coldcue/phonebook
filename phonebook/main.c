@@ -26,6 +26,7 @@ int main()
 		else if(strcmp(command,"exit")==0)exit=1;
 		else if(strcmp(command,"test")==0){
 			Contact cntct;
+			ContactList *cntcts;
 			/*for(i=0; i<21123; i++){
 			strcpy(cntct.email,"coldcue@gmail.com");
 			strcpy(cntct.name,"Andrew Szell");
@@ -34,12 +35,14 @@ int main()
 			db_save(&cntct);
 			}*/
 
-			printf("%d",db_get(13445,&cntct));
-			printf("%s",cntct.name);
+			printf("%d",db_get(311,&cntct));
+			//printf("%s",cntct.name);
 			//db_delete(cntct.id);
-			//strcpy(cntct.name,"Szaros Józsi");
-			//printf("%d",db_update(&cntct));
+			strcpy(cntct.name,"Baszar Benedek");
+			printf("%d",db_update(&cntct));
 			//putchar('a');
+			cntcts = db_search("szar");
+			list_free(&cntcts);
 		}
 		else err=1;
 

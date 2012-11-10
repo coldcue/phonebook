@@ -2,11 +2,10 @@
 #define DATABASE_H
 
 #define DBFILE "db.bin"
-#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "main.h"
+#include <ctype.h>
 
 /**
 The Contact entity structure
@@ -19,10 +18,14 @@ typedef struct {
 /**
 A list of contacts
 */
-typedef struct {
-	Contact cntct;
+struct ContactList {
+	Contact *cntct;
 	struct ContactList *next;
-} ContactList;
+};
+
+typedef struct ContactList ContactList;
+
+#include "list.h"
 
 /**
 Initialize the database
@@ -59,7 +62,7 @@ Gets a Contact from the database
 @param id The ID of the Contact
 @return A ContactVector (if the size is 0, there are no Contacts found)
 */
-ContactList* db_search(char needle[]);
+ContactList* db_search(const char * needle);
 
 /**
 Destroys the database

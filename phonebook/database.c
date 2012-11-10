@@ -168,3 +168,38 @@ int db_delete(unsigned id)
 	return 1;
 }
 
+ContactList* db_search(char needle[])
+{
+	ContactList *list = NULL;
+	fpos_t pos;
+	char buf[sizeof(Contact)];
+	FILE *db;
+
+	db = fopen(DBFILE,"rb");
+
+	while(!feof(db)) {
+		int i;
+		char *bp=buf, *it, *nb, *nbp;
+
+		pos = ftell(db);
+		fread(buf,sizeof(Contact),1,db);
+
+		for(it=buf; it!=buf+sizeof(Contact); it++)
+			if(*it>32) *bp++ = toupper(*it);
+		*bp=0;
+
+		nb = (char*) calloc(strlen(needle)+1,sizeof(char));
+		for(bp=needle,nbp=nb;*nbp++=toupper(*bp++););
+
+		if(strstr(buf,nb)!=NULL)
+		{
+			Contact *cntct = (Contact*) malloc(sizeof(Contact));
+			db_read(db,cntct,&pos);
+			list_put(&list,cntct);
+		}
+	}
+
+	fclose(db);
+
+	return list;
+}
