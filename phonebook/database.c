@@ -117,3 +117,18 @@ int db_get(unsigned id, Contact *cntct)
 	return r;
 }
 
+int db_update(Contact *cntct)
+{
+	fpos_t pos;
+	FILE *db;
+
+	db = fopen(DBFILE,"rb+");
+
+	if(!db_getPosOfEntity(cntct->id, db, &pos)) return 0;
+	fsetpos(db,&pos);
+	fwrite(cntct,sizeof(Contact),1,db);
+	fclose(db);
+
+	return 1;
+}
+

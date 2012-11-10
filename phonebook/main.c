@@ -25,16 +25,19 @@ int main()
 		if(strcmp(command,"help")==0)printf("Segitseg...\n");
 		else if(strcmp(command,"exit")==0)exit=1;
 		else if(strcmp(command,"test")==0){
-			Contact cntct,cntct2;
-			//for(i=0; i<2112323; i++){
-			//strcpy(cntct.email,"coldcue@gmail.com");
-			//strcpy(cntct.name,"Andrew Szell");
-			//strcpy(cntct.number,"06202094988");
-			//strcpy(cntct.occptn,"Programmer");
-			//db_save(&cntct);
-			//}
+			Contact cntct;
+			/*for(i=0; i<21123; i++){
+			strcpy(cntct.email,"coldcue@gmail.com");
+			strcpy(cntct.name,"Andrew Szell");
+			strcpy(cntct.number,"06202094988");
+			strcpy(cntct.occptn,"Programmer");
+			db_save(&cntct);
+			}*/
 
-			printf("%d",db_get(13445,&cntct2));
+			printf("%d",db_get(13445,&cntct));
+			printf("%s",cntct.name);
+			//strcpy(cntct.name,"Szaros Józsi");
+			//printf("%d",db_update(&cntct));
 			putchar('a');
 		}
 		else err=1;
