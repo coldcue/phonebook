@@ -14,19 +14,34 @@ int main()
 
 	do
 	{
-		char* command;
+		char *txt, *command;
 
 		if(err){ 
 			printf("Hibas parancs! Segitseghez ird be 'help'!");
 			err=0;
 		}
-		command = cliapi_waitForCommand();
+		txt = cliapi_waitForCommand();
+		command = strtok(txt," ");
 
+		/* Help command */
 		if(strcmp(command,"help")==0)printf("Segitseg...\n");
+
+		/* Open command */
+		else if(strcmp(command,"open")==0) {
+			char *tmp;
+			unsigned id;
+			Contact cntct;
+			tmp = strtok(NULL," ");
+			id = atoi(tmp);
+			if(db_get(id,&cntct))
+				cliapi_printContact(&cntct);
+			else printf("# Nincs ilyen rekord!\n");
+		}
+
 		else if(strcmp(command,"exit")==0)exit=1;
 		else if(strcmp(command,"test")==0){
 			Contact cntct;
-			ContactList *cntcts;
+			ContactList *cntcts=NULL;
 			/*for(i=0; i<21123; i++){
 			strcpy(cntct.email,"coldcue@gmail.com");
 			strcpy(cntct.name,"Andrew Szell");
