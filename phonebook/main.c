@@ -36,9 +36,10 @@ int main()
 
 			printf("%d",db_get(13445,&cntct));
 			printf("%s",cntct.name);
+			//db_delete(cntct.id);
 			//strcpy(cntct.name,"Szaros Józsi");
 			//printf("%d",db_update(&cntct));
-			putchar('a');
+			//putchar('a');
 		}
 		else err=1;
 

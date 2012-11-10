@@ -45,7 +45,7 @@ int db_update(Contact *cntct);
 Deletes a Contact in the database
 @param cntct A pointer of a Contact
 */
-int db_delete(Contact *cntct);
+int db_delete(unsigned id);
 
 /**
 Gets a Contact from the database

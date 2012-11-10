@@ -132,3 +132,39 @@ int db_update(Contact *cntct)
 	return 1;
 }
 
+int db_delete(unsigned id)
+{
+	fpos_t pos;
+	Contact buf;
+	FILE *db, *tmp;
+	char tmpname[L_tmpnam];
+
+	db = fopen(DBFILE,"rb");
+	sprintf(tmpname, "%sbin", tmpnam(NULL)+1);
+	tmp = fopen(tmpname,"wb");
+
+	if(!db_getPosOfEntity(id, db, &pos)) return 0;
+	rewind(db);
+
+	while(pos!=ftell(db) && !feof(db)) {
+		fread(&buf,sizeof(Contact),1,db);
+		fwrite(&buf,sizeof(Contact),1,tmp);
+	}
+
+	pos+=sizeof(Contact);
+	fsetpos(db,&pos);
+
+	while(!feof(db)) {
+		fread(&buf,sizeof(Contact),1,db);
+		fwrite(&buf,sizeof(Contact),1,tmp);
+	}
+
+	fclose(db);
+	fclose(tmp);
+
+	remove(DBFILE);
+	rename(tmpname,DBFILE);
+
+	return 1;
+}
+
