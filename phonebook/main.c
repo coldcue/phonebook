@@ -14,13 +14,13 @@ int main()
 
 	do
 	{
-		char *txt, *command;
+		char txt[1024], *command, *str;
 
 		if(err){ 
 			printf("Hibas parancs! Segitseghez ird be 'help'!");
 			err=0;
 		}
-		txt = cliapi_waitForCommand();
+		cliapi_waitForCommand(txt);
 		command = strtok(txt," ");
 
 		/* Help command */
@@ -35,6 +35,35 @@ int main()
 			id = atoi(tmp);
 			if(db_get(id,&cntct))
 				cliapi_printContact(&cntct);
+			else printf("# Nincs ilyen rekord!\n");
+		}
+
+		/* Search command */
+		else if(strcmp(command,"search")==0) {
+			ContactList *cntcts = NULL;
+			char *tmp = txt+strlen(command)+1;
+
+			cntcts = db_search(tmp);
+			if(cntcts==NULL) printf("Nincs találat!");
+			else {
+				ContactList *p;
+				for(p=cntcts;p!=NULL;p=p->next) cliapi_printContact(p->cntct);
+			}
+			list_free(&cntcts);
+		}
+
+		/* Delete command */
+		else if(strcmp(command,"del")==0) {
+			char *tmp;
+			unsigned id;
+			Contact cntct;
+			tmp = strtok(NULL," ");
+			id = atoi(tmp);
+			if(db_get(id,&cntct)) {
+				cliapi_printContact(&cntct);
+				db_delete(id);
+				printf("# Rekord torolve!\n");
+			}
 			else printf("# Nincs ilyen rekord!\n");
 		}
 
@@ -60,7 +89,6 @@ int main()
 			list_free(&cntcts);
 		}
 		else err=1;
-
 	}
 	while(!exit);
 

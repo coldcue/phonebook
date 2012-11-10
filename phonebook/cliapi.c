@@ -5,15 +5,13 @@ void cliapi_printHeader()
 	printf("########## TELEFONKONYV ##########\nSegitseghez ird be 'help'!\n");
 }
 
-char* cliapi_waitForCommand()
+void cliapi_waitForCommand(char buf[])
 {
-	char line[1024], *pos;
-
-	pos=line;
+	char *pos;
+	pos=buf;
 	printf("\n> ");
 	while((*pos++=(char)getchar())!='\n');
 	*--pos=0;
-	return line;
 }
 
 void cliapi_printContact(Contact *cntct)
