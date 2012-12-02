@@ -25,7 +25,14 @@ int main()
 		command = strtok(txt," ");
 
 		/* Help command */
-		if(strcmp(command,"help")==0)printf("Segitseg...\n");
+		if(strcmp(command,"help")==0){
+			printf("Megnyitas: 'open [id]'\n");
+			printf("Kereses:   'search [kulcsszo]'\n");
+			printf("Hozzaadas: 'add'\n");
+			printf("Modositas :'mod [id]'\n");
+			printf("Torles:    'del [id]'\n");
+			printf("Teszt adatbazis letrehozasa: 'test'\n");
+		}
 
 		/* Open command */
 		else if(strcmp(command,"open")==0) {
@@ -45,7 +52,7 @@ int main()
 			char *tmp = txt+strlen(command)+1;
 
 			cntcts = db_search(tmp);
-			if(cntcts==NULL) printf("Nincs találat!");
+			if(cntcts==NULL) printf("# Nincs talalat!");
 			else {
 				ContactList *p;
 				for(p=cntcts;p!=NULL;p=p->next) cliapi_printContact(p->cntct);
@@ -68,11 +75,36 @@ int main()
 			else printf("# Nincs ilyen rekord!\n");
 		}
 
+		/* Add command */
+		else if(strcmp(command,"add")==0) {
+			Contact * cntct;
+			printf("# Uj rekord hozzaadasa\n");
+			cntct = cliapi_askNewDetails();
+			db_save(cntct);
+			printf("# Uj rekord elmentve! ID:%d\n",cntct->id);
+			free(cntct);
+		}
+
+		/* Mod command */
+		else if(strcmp(command,"mod")==0) {
+			Contact * cntct;
+			char *tmp;
+			unsigned id;
+			tmp = strtok(NULL," ");
+			id = atoi(tmp);
+			cntct = (Contact*) malloc(sizeof(Contact));
+			db_get(id, cntct);
+			printf("# (%d) %s adatainak modositasa\n",cntct->id, cntct->name);
+			cliapi_askModDetails(cntct);
+			db_update(cntct);
+			printf("# Rekord elmentve!\n");
+		}
+
 		else if(strcmp(command,"exit")==0)exit=1;
 		else if(strcmp(command,"test")==0){
 			Contact cntct;
 
-			for(i=0; i<2000; i++){
+			for(i=0; i<400; i++){
 			strcpy(cntct.email,"coldcue@gmail.com");
 			strcpy(cntct.name,"Andrew Szell");
 			strcpy(cntct.number,"06202094988");
@@ -84,7 +116,7 @@ int main()
 			strcpy(cntct.name,"Kukor Ica");
 			printf("%d",db_update(&cntct));
 
-			printf("%d",db_get(878,&cntct));
+			printf("%d",db_get(278,&cntct));
 			strcpy(cntct.name,"Buz Ubul");
 			printf("%d",db_update(&cntct));
 

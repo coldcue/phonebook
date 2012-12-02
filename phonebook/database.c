@@ -182,12 +182,13 @@ ContactList* db_search(char needle[])
 
 	db = fopen(DBFILE,"rb");
 
-	while(!feof(db)) {
+	while(1) {
 		int i;
 		char *bp=buf, *it, *nb, *nbp;
 
 		pos = ftell(db);
 		fread(buf,sizeof(Contact),1,db);
+		if(feof(db)) return list;
 
 		for(it=buf; it!=buf+sizeof(Contact); it++)
 			if(*it>32) *bp++ = toupper(*it);
@@ -198,7 +199,7 @@ ContactList* db_search(char needle[])
 
 		if(strstr(buf,nb)!=NULL)
 		{
-			Contact *cntct = (Contact*) malloc(sizeof(Contact));
+			Contact *cntct = (Contact*) calloc(1,sizeof(Contact));
 			db_read(db,cntct,&pos);
 			list_put(&list,cntct);
 		}

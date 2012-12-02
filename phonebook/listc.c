@@ -3,7 +3,7 @@
 void list_put(ContactList **list, Contact *cntct){
 	ContactList *e, *lp;
 
-	e = (ContactList*) malloc(sizeof(ContactList));
+	e = (ContactList*) calloc(1,sizeof(ContactList));
 	e->cntct = cntct;
 	e->next = NULL;
 
