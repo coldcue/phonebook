@@ -1,10 +1,16 @@
 #include "cliapi.h"
 
+/**
+Prints out the header
+*/
 void cliapi_printHeader()
 {
 	printf("########## TELEFONKONYV ##########\nSegitseghez ird be 'help'!\n");
 }
 
+/**
+Waits for a command
+*/
 void cliapi_waitForCommand(char buf[])
 {
 	char *pos;
@@ -14,6 +20,9 @@ void cliapi_waitForCommand(char buf[])
 	*--pos=0;
 }
 
+/**
+Prints out a contact
+*/
 void cliapi_printContact(Contact *cntct)
 {
 	printf("#### ID: %d ####\n",cntct->id);
@@ -24,6 +33,9 @@ void cliapi_printContact(Contact *cntct)
 	printf("################\n");
 }
 
+/**
+Asks for details
+*/
 void cliapi_askDetail(const char name[], char dest[], const size_t maxsize)
 {
 	int temp, count=0;
@@ -32,6 +44,9 @@ void cliapi_askDetail(const char name[], char dest[], const size_t maxsize)
 	dest[count] = '\0';
 }
 
+/**
+Asks for new details
+*/
 Contact * cliapi_askNewDetails()
 {
 	Contact * cntct;

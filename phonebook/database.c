@@ -5,6 +5,9 @@ int db_construct()
 	if(fopen(DBFILE,"rb")==NULL) fopen(DBFILE,"wb");
 }
 
+/**
+Checks if the database is empty by seeking to the end of the file.
+*/
 int db_isEmpty(FILE* db)
 {
 	fpos_t pos;
@@ -15,6 +18,9 @@ int db_isEmpty(FILE* db)
 	return pos?0:1;
 }
 
+/**
+Gets the biggest id by seeking to the end of the file.
+*/
 unsigned db_getBiggestId(FILE* db)
 {
 	unsigned id;
@@ -42,6 +48,9 @@ int db_save(Contact * cntct)
 	return 1;
 }
 
+/**
+Counts the number of entities by seeking to the end of the file
+*/
 unsigned db_countEntities(FILE *db)
 {
 	unsigned r;
@@ -51,6 +60,9 @@ unsigned db_countEntities(FILE *db)
 	return r;
 }
 
+/**
+Gets the ID from a position
+*/
 unsigned db_getIdFromPos(FILE* db, const fpos_t *pos)
 {
 	unsigned id;
@@ -59,6 +71,9 @@ unsigned db_getIdFromPos(FILE* db, const fpos_t *pos)
 	return id;
 }
 
+/**
+Gets the position of an entity by ID using binary search
+*/
 int db_getPosOfEntity(unsigned id, FILE *db, fpos_t *cur)
 {
 	unsigned min_id, max_id, cur_id;
@@ -94,6 +109,9 @@ int db_getPosOfEntity(unsigned id, FILE *db, fpos_t *cur)
 	return 0;
 }
 
+/**
+Reads an entity by a given position
+*/
 int db_read(FILE *db, Contact * cntct, const fpos_t *pos)
 {
 	Contact buf;
@@ -144,21 +162,26 @@ int db_delete(unsigned id)
 	FILE *db, *tmp;
 	char tmpname[L_tmpnam];
 
+	/* Create a temporary file */
 	db = fopen(DBFILE,"rb");
 	sprintf(tmpname, "%sbin", tmpnam(NULL)+1);
 	tmp = fopen(tmpname,"wb");
 
+	/* Set the file's position to the beginning */
 	if(!db_getPosOfEntity(id, db, &pos)) return 0;
 	rewind(db);
 
+	/* Copy all contacts to the temporary file, until the specified Contact */
 	while(pos!=ftell(db) && !feof(db)) {
 		fread(&buf,sizeof(Contact),1,db);
 		fwrite(&buf,sizeof(Contact),1,tmp);
 	}
 
+	/* Jump over the Contact */
 	pos+=sizeof(Contact);
 	fsetpos(db,&pos);
 
+	/* Copy the remaining contacts */
 	while(!feof(db)) {
 		fread(&buf,sizeof(Contact),1,db);
 		fwrite(&buf,sizeof(Contact),1,tmp);
@@ -167,6 +190,7 @@ int db_delete(unsigned id)
 	fclose(db);
 	fclose(tmp);
 
+	/* Remove the DBFILE and rename a temporary file to the DBFILE */
 	remove(DBFILE);
 	rename(tmpname,DBFILE);
 
