@@ -36,12 +36,13 @@ int db_save(Contact * cntct)
 {
 	FILE* db;
 	
+	/* Get the biggest id, and increment by one */
 	db = fopen(DBFILE,"rb");
 	cntct->id = db_getBiggestId(db)+1;
 	fclose(db);
 
+	/* Append the new Contact to the end of the file */
 	db = fopen(DBFILE,"ab");
-	
 	fwrite(cntct,sizeof(Contact),1,db);
 	fclose(db);
 
@@ -91,6 +92,7 @@ int db_getPosOfEntity(unsigned id, FILE *db, fpos_t *cur)
 	*cur = (min/sizeof(Contact)+max/sizeof(Contact))/2*sizeof(Contact);
 	cur_id = db_getIdFromPos(db,cur);
 
+	/* Do the binary searching */
 	while(cur_id != id && min_id <= max_id)
 	{
 		if(cur_id<id){
@@ -130,6 +132,7 @@ int db_get(unsigned id, Contact *cntct)
 	db = fopen(DBFILE,"rb");
 	if(db_isEmpty(db)) return 0;
 
+	/* Get the position of the ID, and then read the contents */
 	if(db_getPosOfEntity(id,db,&pos))
 	{
 		db_read(db,cntct,&pos);
@@ -147,11 +150,14 @@ int db_update(Contact *cntct)
 
 	db = fopen(DBFILE,"rb+");
 
+	/* Get the position of the Contact */
 	if(!db_getPosOfEntity(cntct->id, db, &pos)) return 0;
+
+	/* Jump to that position, and then rewrite */
 	fsetpos(db,&pos);
 	fwrite(cntct,sizeof(Contact),1,db);
-	fclose(db);
 
+	fclose(db);
 	return 1;
 }
 
@@ -210,17 +216,21 @@ ContactList* db_search(char needle[])
 		int i;
 		char *bp=buf, *it, *nb, *nbp;
 
+		/* Read the next Contact, if the file is at the end, then return the ContactList */
 		pos = ftell(db);
 		fread(buf,sizeof(Contact),1,db);
 		if(feof(db)) return list;
 
+		/* Copy the contents to the buffer */
 		for(it=buf; it!=buf+sizeof(Contact); it++)
 			if(*it>32) *bp++ = toupper(*it);
 		*bp=0;
 
+		/* Toupper each char */
 		nb = (char*) calloc(strlen(needle)+1,sizeof(char));
 		for(bp=needle,nbp=nb;*nbp++=toupper(*bp++););
 
+		/* If the phrase is found, then add to the list */
 		if(strstr(buf,nb)!=NULL)
 		{
 			Contact *cntct = (Contact*) calloc(1,sizeof(Contact));
